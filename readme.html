@@ -29,7 +29,67 @@ end
 
 <img src="./screenshot.png" alt="screenshot" width="550">
 
-For the other output.txt file column 3 (x) and 1 (y) are used in
-figures 6 7 and 8 for the V vs ADP phase plots.
+ A lot of the figures weren't fully scripted.
 
+fixed_finder.c takes the same parameter changes in atp.h that atp.c
+does
+
+It will produce the appropriate nullcline for those parameters.
+
+You just plot the results in V vs ADP (or V vs ADP and Ca in 6) rather
+than in X vs t like in the other figures
+
+Figure 6 is more complicated because additional scripting is needed to
+create an array of ADP/Ca values from the ADP nullcline produced.
+Additionally, matplotlib, which was used to generate that figure
+cannot deal with overlapping surfaces well, so each surface had to be
+broken up into pieces.
+
+I included the scripts that automated the NMDA/NN414 permutations for
+both nullclines and dynamics (script.py) and to generate a crude
+version figure 6 (intersect.py) given the values (though data file
+names that that script calls would have to be changed in
+intersect.py). All figures in the paper had substantial work done to
+clean the colors, fonts, axes in illustrator after the fact - but this
+is fairly close.
+
+python script.py &lt;suffix&gt;
+
+will create the data from figure 4 in a directory called suffix with
+prefixes a,b,c,d corresponding to the subplots in figure 4
+
+a = Control
+b = NN414
+c = NMDA
+d = NN414 + NMDA
+
+To get the nullcline picture for NMDA alone you would plot V vs ADP
+from c_&lt;suffix&gt;_data.dat and (7 vs 2) and from
+c_&lt;suffix&gt;_nullcline.dat (3 vs 1). To do this run:
+
+python script.py c
+
+and then you could type in the matlab command prompt:
+
+cd RELEASE/c/
+load c_c_data.dat;
+load c_c_nullcline.dat;
+d=c_c_data;
+n=c_c_nullcline;
+figure
+plot(d(:,2),d(:,7))
+<img src="./screenshot2.png" alt="screenshot2" width="550">
+
+figure
+plot(n(:,1),n(:,3))
+<img src="./screenshot3.png" alt="screenshot3" width="550">
+
+To get results for figs 7 and 8 change G_GABA, TONIC (to make GABA
+tonic or a pulse), fca etc in atp.h as appropriate to the values in
+captions before running the script
+
+(you can also change script.py to ignore a and b for these if desired
+as they are not used)
+
+I hope this helps
 </html></pre>
